@@ -1,0 +1,49 @@
+
+services:
+  fincore-api:
+    container_name: fincore-api
+    build:
+      context: ./back-end
+      dockerfile: Dockerfile
+    ports:
+      - "8080:8080"
+    environment:
+      SPRING_PROFILES_ACTIVE: docker
+      DB_HOST: fincore-db
+      DB_PORT: 5432
+      DB_NAME: fincore
+      DB_USER: fincore_user
+      DB_PASSWORD: ${DB_PASSWORD}
+    depends_on:
+      fincore-db:
+        condition: service_healthy
+    networks:
+      - fincore-network
+    restart: unless-stopped
+
+  fincore-db:
+    container_name: fincore-db
+    image: postgres:17
+    environment:
+      POSTGRES_DB: fincore
+      POSTGRES_USER: fincore_user
+      POSTGRES_PASSWORD: ${DB_PASSWORD}
+    ports:
+      - "5433:5432"
+    volumes:
+      - fincore-data:/var/lib/postgresql/data
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U fincore_user -d fincore"]
+      interval: 5s
+      timeout: 5s
+      retries: 10
+    networks:
+      - fincore-network
+    restart: unless-stopped
+
+networks:
+  fincore-network:
+    driver: bridge
+
+volumes:
+  fincore-data:
