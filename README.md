@@ -1,4 +1,4 @@
-# 💰 FinCore API V0.1.0
+# 💰 FinCore API v0.1.0
 
 > API REST desenvolvida em Java com Spring Boot para gerenciamento de operações financeiras, oferecendo uma estrutura modular, segura e escalável para controle de contas, receitas, despesas, transferências e planejamento orçamentário.
 
