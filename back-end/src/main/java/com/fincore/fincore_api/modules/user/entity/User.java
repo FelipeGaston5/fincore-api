@@ -52,9 +52,6 @@ public class User {
 
         this.updatedAt = now;
 
-        if (this.enabled == false){
-            this.enabled = true;
-        }
     }
 
     @PreUpdate
