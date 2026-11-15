@@ -1,6 +1,6 @@
 # 💰 FinCore API v0.1.0
 
-> API REST desenvolvida em Java com Spring Boot para gerenciamento de operações financeiras, oferecendo uma estrutura modular, segura e escalável para controle de contas, receitas, despesas, transferências e planejamento orçamentário.
+> API REST desenvolvida em Java com Spring Boot para gerenciamento financeiro, com arquitetura modular, autenticação JWT e controle seguro de acesso a recursos financeiros.
 
 ---
 
@@ -11,6 +11,7 @@
 - [Arquitetura e Tecnologias](#-arquitetura-e-tecnologias)
 - [Estrutura do Projeto](#-estrutura-do-projeto)
 - [Banco de Dados](#-banco-de-dados)
+- [Segurança](#-segurança)
 - [Pré-requisitos](#-pré-requisitos)
 - [Instalação e Execução](#-instalação-e-execução)
 - [Variáveis de Ambiente](#-variáveis-de-ambiente)
@@ -22,48 +23,57 @@
 
 ## 🚀 Sobre o Projeto
 
-O **FinCore API** é um projeto backend voltado ao gerenciamento de operações financeiras, desenvolvido utilizando Java e Spring Boot.
+O **FinCore API** é um projeto backend voltado ao gerenciamento de operações financeiras, desenvolvido com Java e Spring Boot.
 
-A proposta é centralizar e organizar operações financeiras por meio de uma API REST, permitindo o gerenciamento de contas, receitas, despesas, transferências entre contas e planejamento de orçamentos.
+Seu objetivo é oferecer uma API REST centralizada para administrar contas, receitas, despesas, transferências e planejamento orçamentário.
 
-O projeto adota uma arquitetura organizada em camadas, com separação de responsabilidades e utilização de ferramentas voltadas à persistência, versionamento do banco de dados e execução em ambientes containerizados.
+O projeto utiliza arquitetura modular, separação de responsabilidades e ferramentas de persistência e versionamento de banco de dados.
 
-O FinCore também foi concebido para servir como backend independente, permitindo futuras integrações com aplicações web, mobile e outros sistemas.
+A aplicação foi concebida para funcionar de maneira independente, permitindo futuras integrações com aplicações web, mobile e outros sistemas.
 
 ---
 
 ## ⚙️ Funcionalidades
 
-O banco de dados e a estrutura inicial do projeto contemplam os seguintes módulos:
+O desenvolvimento do FinCore é organizado em módulos independentes, permitindo evolução gradual e manutenção simplificada.
+
+### Implementadas
 
 | Módulo | Descrição |
 |---|---|
-| 👤 Usuários | Estrutura para gerenciamento de usuários |
-| 🏦 Contas | Cadastro e gerenciamento de contas bancárias e carteiras |
+| 👤 Usuários | Cadastro e gerenciamento de usuários |
+| 🔐 Autenticação | Login e autenticação utilizando JWT |
+| 🛡️ Segurança | Proteção de rotas e controle de acesso com Spring Security |
+| 🏦 Contas | Cadastro, consulta, atualização e exclusão lógica de contas financeiras |
+
+### Planejadas
+
+| Módulo | Descrição |
+|---|---|
 | 🗂️ Categorias | Organização de receitas e despesas por categorias |
-| 💸 Transações | Registro de receitas e despesas |
+| 💸 Transações | Registro e gerenciamento de receitas e despesas |
 | 🔄 Transferências | Controle de transferências entre contas |
 | 📊 Orçamentos | Planejamento e acompanhamento de limites financeiros |
-| 🔁 Transações recorrentes | Estrutura para lançamentos financeiros recorrentes |
+| 🔁 Transações recorrentes | Gerenciamento de lançamentos financeiros recorrentes |
 
 ---
 
 ## 🛠️ Arquitetura e Tecnologias
 
-O projeto utiliza tecnologias do ecossistema Java para construção de APIs REST e gerenciamento de dados.
-
 ### Backend
 
 - **Java 21** — Linguagem principal.
 - **Spring Boot 4.1.2** — Framework para desenvolvimento da aplicação.
-- **Spring Data JPA** — Abstração e gerenciamento da persistência de dados.
-- **Maven** — Gerenciamento de dependências e build do projeto.
+- **Spring Data JPA** — Persistência e gerenciamento de entidades.
+- **Spring Security** — Autenticação e autorização.
+- **JWT** — Autenticação baseada em tokens.
+- **Maven** — Gerenciamento de dependências e build.
 - **Maven Wrapper** — Padronização da execução do Maven.
 
 ### Banco de Dados
 
 - **PostgreSQL 17** — Banco de dados relacional.
-- **Flyway** — Versionamento e gerenciamento de migrations do banco de dados.
+- **Flyway** — Versionamento e gerenciamento de migrations.
 
 ### Infraestrutura
 
@@ -74,24 +84,44 @@ O projeto utiliza tecnologias do ecossistema Java para construção de APIs REST
 
 ## 📂 Estrutura do Projeto
 
-O repositório está organizado separando a aplicação backend dos arquivos de infraestrutura.
+O repositório está organizado separando o backend dos arquivos de infraestrutura.
 
 ```text
 fincore-api/
 │
 ├── .github/
-│
 ├── .vscode/
 │
 ├── back-end/
 │   ├── src/
 │   │   ├── main/
 │   │   │   ├── java/
-│   │   │   │   └── com/
-│   │   │   │       └── fincore/
-│   │   │   │           └── fincore_api/
-│   │   │   │               ├── common/
-│   │   │   │               └── FincoreApiApplication.java
+│   │   │   │   └── com/fincore/fincore_api/
+│   │   │   │       ├── common/
+│   │   │   │       │
+│   │   │   │       ├── modules/
+│   │   │   │       │   ├── user/
+│   │   │   │       │   │   ├── controller/
+│   │   │   │       │   │   ├── dto/
+│   │   │   │       │   │   ├── entity/
+│   │   │   │       │   │   ├── repository/
+│   │   │   │       │   │   └── service/
+│   │   │   │       │   │
+│   │   │   │       │   ├── account/
+│   │   │   │       │   │   ├── controller/
+│   │   │   │       │   │   ├── dto/
+│   │   │   │       │   │   ├── entity/
+│   │   │   │       │   │   ├── repository/
+│   │   │   │       │   │   └── service/
+│   │   │   │       │   │
+│   │   │   │       │   └── auth/
+│   │   │   │       │
+│   │   │   │       ├── security/
+│   │   │   │       │   ├── config/
+│   │   │   │       │   ├── jwt/
+│   │   │   │       │   └── ...
+│   │   │   │       │
+│   │   │   │       └── FincoreApiApplication.java
 │   │   │   │
 │   │   │   └── resources/
 │   │   │       ├── db/
@@ -100,10 +130,6 @@ fincore-api/
 │   │   │
 │   │   └── test/
 │   │       └── java/
-│   │           └── com/
-│   │               └── fincore/
-│   │                   └── fincore_api/
-│   │                       └── FincoreApiApplicationTests.java
 │   │
 │   ├── Dockerfile
 │   ├── .dockerignore
@@ -111,10 +137,12 @@ fincore-api/
 │   └── mvnw
 │
 ├── docker-compose.yml
+├── .env.example
+├── .gitignore
 └── README.md
 ```
 
-*Observação: a estrutura representa a organização atual do repositório. Novos pacotes e camadas serão incorporados conforme a implementação dos módulos.*
+*Observação: a estrutura apresenta a organização modular do projeto. Novos módulos e componentes serão incorporados conforme o desenvolvimento.*
 
 ---
 
@@ -122,17 +150,19 @@ fincore-api/
 
 O FinCore utiliza PostgreSQL 17 como sistema de gerenciamento de banco de dados.
 
-A estrutura inicial do banco é gerenciada pelo Flyway, permitindo versionar e aplicar alterações no esquema de forma controlada.
+A estrutura do banco é gerenciada pelo Flyway, permitindo controlar a evolução do esquema por meio de migrations versionadas.
 
 ### Tabelas principais
 
-- `users`
-- `accounts`
-- `categories`
-- `transactions`
-- `transfers`
-- `budgets`
-- `recurring_transactions`
+| Tabela | Finalidade |
+|---|---|
+| `users` | Armazenamento dos usuários |
+| `accounts` | Contas bancárias e carteiras |
+| `categories` | Categorias financeiras |
+| `transactions` | Receitas e despesas |
+| `transfers` | Transferências entre contas |
+| `budgets` | Orçamentos financeiros |
+| `recurring_transactions` | Lançamentos recorrentes |
 
 As migrations ficam armazenadas em:
 
@@ -140,18 +170,51 @@ As migrations ficam armazenadas em:
 back-end/src/main/resources/db/migration/
 ```
 
+O Hibernate utiliza validação do esquema, enquanto o Flyway controla as alterações estruturais do banco de dados.
+
+---
+
+## 🔐 Segurança
+
+A API utiliza Spring Security e autenticação baseada em JSON Web Tokens (JWT).
+
+Entre os mecanismos implementados estão:
+
+- Autenticação de usuários.
+- Geração e validação de tokens JWT.
+- Proteção de endpoints.
+- Identificação do usuário autenticado.
+- Controle de acesso aos recursos financeiros.
+- Criptografia de senhas por meio de PasswordEncoder.
+- Configuração de CORS para controle de origens autorizadas.
+
+### Autenticação
+
+O fluxo de autenticação utiliza tokens de acesso.
+
+1. O usuário envia suas credenciais para autenticação.
+2. A API valida as credenciais.
+3. Um token JWT é gerado.
+4. O cliente utiliza o token nas requisições protegidas.
+
+Exemplo de cabeçalho:
+
+```http
+Authorization: Bearer SEU_TOKEN_JWT
+```
+
 ---
 
 ## 📋 Pré-requisitos
 
-Para executar o projeto localmente, são necessárias as seguintes ferramentas:
+Para executar o projeto localmente, são necessárias:
 
-- Java JDK 21 ou superior.
+- Java JDK 21.
 - Docker Engine.
 - Docker Compose.
 - Git.
 
-Não é necessário instalar o PostgreSQL diretamente na máquina, pois o banco de dados é executado em um container Docker.
+Não é necessário instalar PostgreSQL diretamente na máquina, pois o banco de dados é executado em um container Docker.
 
 ---
 
@@ -166,7 +229,15 @@ cd fincore-api
 
 ### 2. Configurar as variáveis de ambiente
 
-Configure as variáveis necessárias para a conexão com o banco de dados, conforme o arquivo `docker-compose.yml`.
+Crie o arquivo `.env` a partir do modelo disponibilizado:
+
+```bash
+cp .env.example .env
+```
+
+Edite o arquivo `.env` e configure as credenciais do banco de dados e a chave JWT.
+
+**Importante:** não compartilhe nem envie o arquivo `.env` para o Git.
 
 ### 3. Construir e iniciar os containers
 
@@ -186,13 +257,17 @@ docker compose ps
 docker compose logs -f fincore-api
 ```
 
-Após a inicialização bem-sucedida, a API estará disponível na porta `8080`.
+Após a inicialização bem-sucedida, a API estará disponível em:
+
+```text
+http://localhost:8080
+```
 
 ---
 
-## 🔐 Variáveis de Ambiente
+## 🔧 Variáveis de Ambiente
 
-As configurações de execução e conexão com o banco de dados são definidas por variáveis de ambiente.
+As configurações da aplicação são definidas por variáveis de ambiente.
 
 | Variável | Descrição |
 |---|---|
@@ -202,16 +277,44 @@ As configurações de execução e conexão com o banco de dados são definidas 
 | `DB_NAME` | Nome do banco de dados |
 | `DB_USER` | Usuário do banco de dados |
 | `DB_PASSWORD` | Senha do banco de dados |
+| `JWT_SECRET` | Chave secreta utilizada na assinatura dos tokens |
+| `JWT_ISSUER` | Emissor dos tokens JWT |
+| `JWT_ACCESS_TOKEN_TTL_SECONDS` | Tempo de validade do token de acesso, em segundos |
+| `CORS_ALLOWED_ORIGINS` | Origens autorizadas para acesso à API |
 
-Não armazene credenciais reais diretamente no repositório.
+Os valores padrão e as configurações específicas de cada ambiente podem ser consultados nos arquivos de configuração.
+
+**Nunca armazene credenciais reais diretamente no repositório.**
 
 ---
 
 ## 🌐 Endpoints
 
-Os endpoints REST serão documentados conforme a implementação dos respectivos módulos.
+A API utiliza o prefixo:
 
-A organização da API busca manter os recursos financeiros separados por responsabilidade, facilitando a manutenção e a expansão do sistema.
+```text
+/api/v1
+```
+
+### Autenticação
+
+| Método | Endpoint | Descrição |
+|---|---|---|
+| POST | `/api/v1/auth/login` | Autenticação do usuário |
+| GET | `/api/v1/auth/me` | Consulta do usuário autenticado |
+| POST | `/api/v1/auth/logout` | Encerramento da sessão de autenticação |
+
+### Contas
+
+| Método | Endpoint | Descrição |
+|---|---|---|
+| GET | `/api/v1/accounts` | Listagem de contas |
+| GET | `/api/v1/accounts/{id}` | Consulta de uma conta |
+| POST | `/api/v1/accounts` | Cadastro de conta |
+| PUT | `/api/v1/accounts/{id}` | Atualização de conta |
+| DELETE | `/api/v1/accounts/{id}` | Exclusão lógica de conta |
+
+*Os endpoints protegidos exigem autenticação por JWT. A disponibilidade e os métodos exatos devem acompanhar as implementações dos respectivos controllers.*
 
 ---
 
@@ -226,10 +329,30 @@ cd back-end
 ./mvnw test
 ```
 
+Para compilar o projeto:
+
+```bash
+./mvnw clean compile
+```
+
+Para gerar o pacote:
+
+```bash
+./mvnw clean package
+```
+
 ---
 
 ## 📄 Licença
 
-Este projeto está em desenvolvimento.
+O FinCore API está em desenvolvimento.
 
-A definição da licença será realizada conforme a estratégia de distribuição e utilização do FinCore API.
+A definição da licença será realizada conforme a estratégia de distribuição e utilização do projeto.
+
+---
+
+## 📌 Status do Projeto
+
+<PRIVATE_PERSON> **FinCore API v0.1.0** encontra-se em desenvolvimento, com estrutura inicial, autenticação, segurança e gerenciamento de contas implementados.
+
+Novos módulos e funcionalidades serão incorporados progressivamente.
