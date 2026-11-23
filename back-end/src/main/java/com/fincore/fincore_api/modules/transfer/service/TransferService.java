@@ -131,7 +131,12 @@ public class TransferService {
     ) {
         UUID userId = findUser(email).getId();
 
-        Transfer transfer = findTransfer(transferId, userId);
+        Transfer transfer = transferRepository
+	    .findByIdAndUserIdForUpdate(transferId, userId)
+	    .orElseThrow(() -> new ResponseStatusException(
+	        HttpStatus.NOT_FOUND,
+	        "Transferência não encontrada."
+	    ));
 
         if (transfer.getStatus() == TransferStatus.CANCELLED) {
             throw new ResponseStatusException(

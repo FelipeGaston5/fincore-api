@@ -39,7 +39,7 @@ public class Account {
     @Column(name="initial_balance", nullable = false, precision = 15, scale =2)
     private BigDecimal initialBalance;
 
-    @Column(name = "Current_balance", nullable = false, precision = 15, scale = 2)
+    @Column(name = "current_balance", nullable = false, precision = 15, scale = 2)
     private BigDecimal currentBalance;
 
     @Column(nullable = false, length = 3)

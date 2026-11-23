@@ -1,3 +1,4 @@
+
 package com.fincore.fincore_api.modules.transfer.repository;
 
 import java.util.List;
@@ -5,10 +6,13 @@ import java.util.Optional;
 import java.util.UUID;
 
 import org.springframework.data.jpa.repository.JpaRepository;
+import org.springframework.data.jpa.repository.Lock;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.query.Param;
 
 import com.fincore.fincore_api.modules.transfer.entity.Transfer;
+
+import jakarta.persistence.LockModeType;
 
 public interface TransferRepository extends JpaRepository<Transfer, UUID> {
 
@@ -19,6 +23,18 @@ public interface TransferRepository extends JpaRepository<Transfer, UUID> {
     Optional<Transfer> findByIdAndUserId(
         UUID id,
         UUID userId
+    );
+
+    @Lock(LockModeType.PESSIMISTIC_WRITE)
+    @Query("""
+        SELECT t
+        FROM Transfer t
+        WHERE t.id = :transferId
+          AND t.userId = :userId
+    """)
+    Optional<Transfer> findByIdAndUserIdForUpdate(
+        @Param("transferId") UUID transferId,
+        @Param("userId") UUID userId
     );
 
     @Query("""
@@ -36,3 +52,4 @@ public interface TransferRepository extends JpaRepository<Transfer, UUID> {
         @Param("accountId") UUID accountId
     );
 }
+
