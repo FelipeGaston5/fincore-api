@@ -1,6 +1,7 @@
 package com.fincore.fincore_api.modules.transaction.service;
 
 import java.math.BigDecimal;
+import java.time.LocalDate;
 import java.time.OffsetDateTime;
 import java.util.HashMap;
 import java.util.List;
@@ -86,6 +87,42 @@ public class TransactionService {
             transaction.setPaidAt(OffsetDateTime.now());
             applyBalance(account, transaction, false);
         }
+
+        return toResponse(transactionRepository.save(transaction));
+    }
+
+    /**
+     * Cria uma transação PENDING vinculada a uma recorrência.
+     * O saldo não é alterado até que a transação seja concluída pelo fluxo normal.
+     */
+    @Transactional
+    public TransactionResponse createFromRecurring(
+        UUID userId,
+        UUID recurringTransactionId,
+        UUID accountId,
+        UUID categoryId,
+        TransactionType transactionType,
+        String description,
+        BigDecimal amount,
+        LocalDate executionDate,
+        String notes
+    ) {
+        Account account = lockAccount(accountId, userId);
+        validateActiveAccount(account);
+        validateCategory(categoryId, userId, transactionType);
+
+        Transaction transaction = new Transaction();
+        transaction.setUserId(userId);
+        transaction.setAccountId(account.getId());
+        transaction.setCategoryId(categoryId);
+        transaction.setTransactionType(transactionType);
+        transaction.setDescription(description.trim());
+        transaction.setAmount(amount);
+        transaction.setTransactionDate(executionDate);
+        transaction.setDueDate(executionDate);
+        transaction.setStatus(TransactionStatus.PENDING);
+        transaction.setNotes(notes);
+        transaction.setRecurringTransactionId(recurringTransactionId);
 
         return toResponse(transactionRepository.save(transaction));
     }
